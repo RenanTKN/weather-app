@@ -9,17 +9,19 @@ import Weather from "./app_component/weather.component";
 
 // api call api.openweathermap.org/data/2.5/weather?q=London,uk
 const API_KEY = "a0f351c7b035d318367908f07d760ca3";
+const HTTP_STATUS_OK = 200;
 
 function App() {
   const [city, setCity] = useState(undefined);
   const [country, setCountry] = useState(undefined);
   const [icon, setIcon] = useState(undefined);
-  const [main, setMain] = useState(undefined);
   const [celsius, setCelsius] = useState(undefined);
   const [tempMax, setTempMax] = useState(undefined);
   const [tempMin, setTempMin] = useState(undefined);
   const [description, setDescription] = useState("");
   const [error, setError] = useState(false);
+  const [notFound, setNotFound] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const weatherIcon = {
     Thunderstorm: "wi-thunderstorm",
@@ -70,6 +72,7 @@ function App() {
     const country = e.target.elements.country.value;
 
     if (city) {
+      setLoading(true);
       const api_call = await fetch(
         `http://api.openweathermap.org/data/2.5/weather?q=${city},${country}&appid=${API_KEY}`
       );
@@ -78,14 +81,19 @@ function App() {
 
       console.log(response);
 
-      if (response.sys) {
+      if (response.cod === HTTP_STATUS_OK) {
+        setLoading(false);
         setCity(`${response.name}, ${response.sys.country}`);
         setCelsius(calcCelsius(response.main.temp));
         setTempMax(calcCelsius(response.main.temp_max));
         setTempMin(calcCelsius(response.main.temp_min));
         setDescription(response.weather[0].description);
         setError(false);
+        setNotFound(false);
         getWeatherIcon(weatherIcon, response.weather[0].id);
+      } else {
+        setNotFound(true);
+        setLoading(false);
       }
     } else {
       setError(true);
@@ -98,11 +106,13 @@ function App() {
       <Weather
         city={city}
         country={country}
-        temp_celsius={celsius}
-        temp_max={tempMax}
-        temp_min={tempMin}
+        tempCelsius={celsius}
+        tempMax={tempMax}
+        tempMin={tempMin}
         description={description}
         weatherIcon={icon}
+        loading={loading}
+        notFound={notFound}
       />
       <Footer />
     </div>
