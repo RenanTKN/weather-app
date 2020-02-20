@@ -1,38 +1,68 @@
+:root {
+  --element-bg-color: rgba(10,10,10,.55);
+}
+
 .App {
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+form {
+  margin-top:  15px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+input[type="text"] {
+  background-color: var(--element-bg-color, rgba(10,10,10,.5)) !important;
+  color: #EEE;
+  border: 0;
+  border-radius: 5px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+input, button {
+  margin-top: 5px;
+}
+
+form input:focus {
+  box-shadow: none !important;
+  color: white !important;
+}
+
+::-webkit-input-placeholder {
+  color: white !important;
+}
+::-moz-placeholder {
+  color: white !important;
+}
+:-ms-input-placeholder {
+  color: white !important;
+}
+:-moz-placeholder {
+  color: white !important;
+}
+
+.weather-data {
+  display: inline-block;
+  min-width: 320px;
+  background-color: var(--element-bg-color, rgba(10,10,10,.5));
+  margin-top: 25px;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.weather-data h1 {
+  font-size: 1.8em;
+}
+
+.weather-data h4 {
+  font-size: 1.3em;
+  padding: 0;
+}
+
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: rgba(10,10,10,.8);
   color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  padding: 0;
 }
