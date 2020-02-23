@@ -43,7 +43,7 @@ form input:focus {
   display: inline-block;
   min-width: 320px;
   background-color: var(--element-bg-color, rgba(10,10,10,.5));
-  margin-top: 25px;
+  margin: 25px 0 50px 0;
   padding: 10px;
   border-radius: 10px;
 }
@@ -55,6 +55,15 @@ form input:focus {
 .weather-data h4 {
   font-size: 1.3em;
   padding: 0;
+}
+
+.loading {
+  width: 100%;
+}
+
+.loading > img {
+  width: 40px;
+  margin-top: 80px;
 }
 
 .footer {
