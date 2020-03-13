@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import "weather-icons/css/weather-icons.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -7,74 +7,71 @@ import Form from "./app_component/form.component";
 import Footer from "./app_component/footer.component";
 import Weather from "./app_component/weather.component";
 
-// api call api.openweathermap.org/data/2.5/weather?q=London,uk
 const API_KEY = "a0f351c7b035d318367908f07d760ca3";
+const HTTP_STATUS_OK = 200;
 
-class App extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      city: undefined,
-      country: undefined,
-      icon: undefined,
-      main: undefined,
-      celcius: undefined,
-      temp_max: undefined,
-      temp_min: undefined,
-      description: "",
-      error: false
-    };
+function App() {
+  const [city, setCity] = useState(undefined);
+  const [country, setCountry] = useState(undefined);
+  const [icon, setIcon] = useState(undefined);
+  const [celsius, setCelsius] = useState(undefined);
+  const [tempMax, setTempMax] = useState(undefined);
+  const [tempMin, setTempMin] = useState(undefined);
+  const [description, setDescription] = useState("");
+  const [error, setError] = useState(false);
+  const [notFound, setNotFound] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-    this.weatherIcon = {
-      Thunderstorm: "wi-thunderstorm",
-      Drizzle: "wi-sleet",
-      Rain: "wi-storm-showers",
-      Snow: "wi-snow",
-      Atmosphere: "wi-fog",
-      Clear: "wi-day-sunny",
-      Clouds: "wi-day-fog"
-    };
-  }
+  const weatherIcon = {
+    Thunderstorm: "wi-thunderstorm",
+    Drizzle: "wi-sleet",
+    Rain: "wi-storm-showers",
+    Snow: "wi-snow",
+    Atmosphere: "wi-fog",
+    Clear: "wi-day-sunny",
+    Clouds: "wi-day-fog"
+  };
 
-  calcCelsius(temp) {
+  function calcCelsius(temp) {
     let celsius = Math.floor(temp - 273.15);
     return celsius;
   }
 
-  getWeatherIcon(icons, rangeId) {
+  function getWeatherIcon(icons, rangeId) {
     switch (true) {
       case rangeId >= 200 && rangeId <= 232:
-        this.setState({ icon: this.weatherIcon.Thunderstorm });
+        setIcon(weatherIcon.Thunderstorm);
         break;
       case rangeId >= 300 && rangeId <= 331:
-        this.setState({ icon: this.weatherIcon.Drizzle });
+        setIcon(weatherIcon.Drizzle);
         break;
       case rangeId >= 500 && rangeId <= 531:
-        this.setState({ icon: this.weatherIcon.Rain });
+        setIcon(weatherIcon.Rain);
         break;
       case rangeId >= 600 && rangeId <= 622:
-        this.setState({ icon: this.weatherIcon.Snow });
+        setIcon(weatherIcon.Snow);
         break;
       case rangeId >= 701 && rangeId <= 781:
-        this.setState({ icon: this.weatherIcon.Atmosphere });
+        setIcon(weatherIcon.Atmosphere);
         break;
       case rangeId === 800:
-        this.setState({ icon: this.weatherIcon.Clear });
+        setIcon(weatherIcon.Clear);
         break;
       case rangeId >= 801 && rangeId <= 804:
       default:
-        this.setState({ icon: this.weatherIcon.Clouds });
+        setIcon(weatherIcon.Clouds);
         break;
     }
   }
 
-  getWeather = async e => {
+  const getWeather = async e => {
     e.preventDefault();
 
     const city = e.target.elements.city.value;
     const country = e.target.elements.country.value;
 
     if (city) {
+      setLoading(true);
       const api_call = await fetch(
         `http://api.openweathermap.org/data/2.5/weather?q=${city},${country}&appid=${API_KEY}`
       );
@@ -83,39 +80,42 @@ class App extends React.Component {
 
       console.log(response);
 
-      if (response.sys) {
-        this.setState({
-          city: `${response.name}, ${response.sys.country}`,
-          celsius: this.calcCelsius(response.main.temp),
-          temp_max: this.calcCelsius(response.main.temp_max),
-          temp_min: this.calcCelsius(response.main.temp_min),
-          description: response.weather[0].description,
-          error: false
-        });
-        this.getWeatherIcon(this.weatherIcon, response.weather[0].id);
+      if (response.cod === HTTP_STATUS_OK) {
+        setLoading(false);
+        setCity(`${response.name}, ${response.sys.country}`);
+        setCelsius(calcCelsius(response.main.temp));
+        setTempMax(calcCelsius(response.main.temp_max));
+        setTempMin(calcCelsius(response.main.temp_min));
+        setDescription(response.weather[0].description);
+        setError(false);
+        setNotFound(false);
+        getWeatherIcon(weatherIcon, response.weather[0].id);
+      } else {
+        setNotFound(true);
+        setLoading(false);
       }
     } else {
-      this.setState({ error: true });
+      setError(true);
     }
   };
 
-  render() {
-    return (
-      <div className="App">
-        <Form loadWeather={this.getWeather} error={this.state.error} />
-        <Weather
-          city={this.state.city}
-          country={this.state.country}
-          temp_celsius={this.state.celsius}
-          temp_max={this.state.temp_max}
-          temp_min={this.state.temp_min}
-          description={this.state.description}
-          weatherIcon={this.state.icon}
-        />
-        <Footer />
-      </div>
-    );
-  }
+  return (
+    <div className="App">
+      <Form loadWeather={getWeather} error={error} />
+      <Weather
+        city={city}
+        country={country}
+        tempCelsius={celsius}
+        tempMax={tempMax}
+        tempMin={tempMin}
+        description={description}
+        weatherIcon={icon}
+        loading={loading}
+        notFound={notFound}
+      />
+      <Footer />
+    </div>
+  );
 }
 
 export default App;
