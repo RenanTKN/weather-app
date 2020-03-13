@@ -1,5 +1,5 @@
 :root {
-  --element-bg-color: rgba(10,10,10,.55);
+  --element-bg-color: rgba(10, 10, 10, 0.55);
 }
 
 .App {
@@ -7,17 +7,18 @@
 }
 
 form {
-  margin-top:  15px;
+  margin-top: 15px;
 }
 
 input[type="text"] {
-  background-color: var(--element-bg-color, rgba(10,10,10,.5)) !important;
-  color: #EEE;
+  background-color: var(--element-bg-color, rgba(10, 10, 10, 0.5)) !important;
+  color: #eee;
   border: 0;
   border-radius: 5px;
 }
 
-input, button {
+input,
+button {
   margin-top: 5px;
 }
 
@@ -42,7 +43,7 @@ form input:focus {
 .weather-data {
   display: inline-block;
   min-width: 320px;
-  background-color: var(--element-bg-color, rgba(10,10,10,.5));
+  background-color: var(--element-bg-color, rgba(10, 10, 10, 0.5));
   margin: 25px 0 50px 0;
   padding: 10px;
   border-radius: 10px;
@@ -71,7 +72,7 @@ form input:focus {
   left: 0;
   bottom: 0;
   width: 100%;
-  background-color: rgba(10,10,10,.8);
+  background-color: rgba(10, 10, 10, 0.8);
   color: white;
   padding: 0;
 }

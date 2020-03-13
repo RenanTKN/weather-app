@@ -23,9 +23,11 @@ function Weather(props) {
         {minMaxTemp(props.tempMin, props.tempMax)}
         <h4 className="py-3">{props.description}</h4>
       </div>
-    ) : '';
+    ) : (
+      ""
+    );
   }
-};
+}
 
 function minMaxTemp(min, max) {
   if (min && max) {

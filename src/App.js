@@ -7,7 +7,6 @@ import Form from "./app_component/form.component";
 import Footer from "./app_component/footer.component";
 import Weather from "./app_component/weather.component";
 
-// api call api.openweathermap.org/data/2.5/weather?q=London,uk
 const API_KEY = "a0f351c7b035d318367908f07d760ca3";
 const HTTP_STATUS_OK = 200;
 
